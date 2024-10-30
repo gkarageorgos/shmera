@@ -1,0 +1,142 @@
+﻿@model PhoneBook.Models.Customer
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Customer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="mt-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mt-3">
+                <label asp-for="Surname" class="control-label"></label>
+                <input asp-for="Surname" class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+            </div>
+            <div class="mt-3">
+                <label asp-for="Notes" class="control-label"></label>
+                <input asp-for="Notes" class="form-control" />
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+            <div class="mt-3">
+                <label asp-for="CompanyId" class="control-label"></label>
+                <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+                <span asp-validation-for="Company.Name" class="text-danger"></span>
+            </div>
+            <div class="mt-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+@* <partial name="_TableCustomersEmails" for="Emails"/> *@
+
+@* @Html.Partial("_TableCustomersEmails", Model.Emails) *@
+
+<partial name="_AddEmail" model='new Email() { CustomerId = Model.Id }' />
+
+<div class="mt-3">
+    <button type="button" class="mt-3 btn btn-success" data-bs-toggle="modal" data-bs-target="#AddEmailModal" >
+        Add Email
+    </button>
+</div>
+
+@* <div class="mt-3">
+    <a class="mt-3 btn btn-success" asp-action="AddEmail" asp-route-customerId="@Model.Id">Add Email</a>
+</div> *@
+
+<table class="table">
+    @if (Model.Emails is not null && Model.Emails.Count > 0)
+    {
+
+    <thead>
+        <tr>
+            <th>Email Address</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        
+            @foreach (var email in Model.Emails)
+            {
+                <tr>
+                    <td>@email.EmailAddress</td>
+                    <td>
+
+                        <partial name="_EditEmail" for="@email" />
+                        <div class="mt-3">
+                            <button type="button" class="mt-3 btn btn-success" data-bs-toggle="modal" data-bs-target="#EditEmailModal" 
+                                    data-id="@email.Id" data-customerId="@ViewBag.CustomerId">
+                                Edit
+                            </button>
+                        </div>
+                        <partial name="_DeleteEmail" for="@email" />
+                        <div class="mt-3">
+                            <button type="button" class="mt-3 btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteEmailModal"
+                                    data-id="@email.Id" data-customerId="@ViewBag.CustomerId">
+                                Delete
+                            </button>
+                        </div>
+                        @* <a class="btn btn-primary" asp-action="EditEmail" asp-route-id="@email.Id">Edit</a>
+                        <a class="btn btn-danger" asp-action="DeleteEmail" asp-route-id="@email.Id">Delete</a> *@
+                    </td>
+                </tr>
+            }
+    </tbody>
+    }
+</table>
+
+<hr />
+
+<partial name="_TableCustomersPhones" for="@Model.Phones" />
+
+@* <div class="mt-3">
+    <a class="mt-3 btn btn-success" asp-action="AddPhone" asp-route-customerId="@Model.Id">Add Phone</a>
+</div>
+
+<table class="table">
+    @if (Model.Phones is not null && Model.Phones.Count > 0)
+    {
+
+        <thead>
+            <tr>
+                <th>Τηλέφωνα</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var phone in Model.Phones)
+            {
+                <tr>
+                    <td>@phone.PhoneNumber</td>
+                    <td>
+                        <a class="btn btn-primary" asp-action="EditPhone" asp-route-id="@phone.Id">Edit</a>
+                        <a class="btn btn-danger" asp-action="DeletePhone" asp-route-id="@phone.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+</table> *@
+
+<div class="mt-3">
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
